@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@500&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Shortner</title>
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper container">
+            <a href="#!" class="brand-logo">Shortner</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#!">Home</a></li>
+                <li><a href="#!">About US</a></li>
+                <li><a href="#!">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col push-l3 s12 l6 z-depth-5">
+                <h2 class="center" style="font-family: 'Fira Sans Condensed', sans-serif;">Short Your URL Now!!</h2>
+                <hr>
+                <blockquote>Simply type the URL you want to shorten and press the Short now button to see magic.</blockquote>
+                <form >
+                    {% csrf_token %}
+                    <div class="input-field container  ">
+                        <i class="material-icons prefix">open_in_browser</i>
+                        <input type="text" name="url" id="url" class="validate">
+                        <label for="url">Enter URL</label>
+                    </div>
+                    <div class="container white-text">
+                        <center>
+                            <button id="short_btn" type="button" class="btn btn-large waves-effect waves-light" style="font-family: 'Fira Sans Condensed', sans-serif;">Short Now</button>
+                        </center>
+                    </div>
+                </form>
+                <br><br>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal1" class="modal modal-fixed-footer">
+        <div class="modal-content">
+          <h4 style="font-family: 'Fira Sans Condensed', sans-serif;">Shorted URL</h4>
+            <blockquote>Thanks for using our service the following code can be used to access the Url that you've saved</blockquote>
+            <br>
+            <p><b>Url Code: </b><span id="code"></span></p>
+            <p><b>Complete URL: </b><span id="complete_url"></span></p>
+            <br>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close Now</a>
+        </div>
+      </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        $(document).ready($('.modal').modal());
+        $("#short_btn").click(()=>{
+            $.post("{% url 'CreateUrl' %}", {
+                'csrfmiddlewaretoken': $("input[name='csrfmiddlewaretoken']").val(),
+                'url': $("input[name='url']").val()
+            }, (data, status)=>{
+                    $("#code").text(data);
+                    $('#complete_url').text("http://website.com/"+data);
+                    $('.modal').modal('open');
+                
+            })
+        });
+    </script>
+</body>
+</html>
